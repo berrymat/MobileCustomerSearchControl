@@ -353,3 +353,47 @@ an ellipsis.  This requires a bit of research, but we can achieve the same with:
     this.SetTextColor(StyleGuide.MCSC_Default_LabelTextColor);
     this.SetFont(StyleGuide.MCSC_Default_LabelFont);
 
+
+
+Step 6
+------
+
++ Now we tackle the custom drawing - this is used to draw dividers between the 
+rows.
+
++ In Android there is also a Draw method that can be overridden:
+
+    public override void Draw(Android.Graphics.Canvas canvas)
+    {
+        base.Draw(canvas);
+
+        if (!TitleMode)
+        {
+            var rect = canvas.ClipBounds;
+            int size = StyleGuide.MCSC_SortOptTbl_LayerBorderWidth.px();
+            int x = rect.Width();
+
+            var paint = new Android.Graphics.Paint();
+            paint.Color = MI.StyleGuide.MCSC_SortOptTbl_BorderColor;
+            paint.StrokeWidth = size;
+            paint.SetStyle(Android.Graphics.Paint.Style.Stroke);
+
+            canvas.DrawLine(0f, 0f, x, 0f, paint);
+        }
+    }
+
+Notes:
+
+    - to figure out the size to be drawn note the use of ClipBounds
+    - also see the use of a Paint object - this is typical
+    - then the actual canvas draw operation takes coordinations, plus paint.
+
+For more detail, start here 
+https://developer.android.com/training/custom-views/custom-drawing.html
+
++ If you run now, you will see nothing drawn.  That is because there is another
+trick if you are doing custom drawing in a layout.  By default drawing is turned
+off in this case, so you need:
+
+    this.SetWillNotDraw(false);
+
