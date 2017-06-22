@@ -648,6 +648,9 @@ namespace MI.CustomControls
 					layoutParameters.Gravity = Android.Views.GravityFlags.Center;
 					_custTypeLabelView.LayoutParameters = layoutParameters;
 
+					_custTypeLabelView.SetMaxLines(1);
+					_custTypeLabelView.Ellipsize = Android.Text.TextUtils.TruncateAt.End;
+
 					this.AddView(_custTypeLabelView);
 #warning NXFW-9999
 					//this.SetNeedsLayout();
@@ -834,9 +837,10 @@ namespace MI.CustomControls
 	{
         internal SelectAllButton(StringHelper stringHelper, MobileCustomerSearchHelper helper) : base()
 		{
-#warning NXFW-9999
-			//Layer.BackgroundColor = StyleGuide.MCSC_SortOptTbl_LayerBgColor;
-			//TouchDown += HandleTouchDown;
+			this.SetBackgroundColor(Android.Graphics.Color.Transparent);
+			this.SetTextColor(StyleGuide.MCSC_Default_LabelTextColor);
+			this.SetFont(StyleGuide.MCSC_Default_LabelFont);
+
 			string title;
 			if (helper.AllSelected())
 				title = stringHelper["wf_select_none"];

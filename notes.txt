@@ -333,3 +333,23 @@ without margins:
     _selectAllButton.LayoutParameters = layoutParameters;
 
 
+
+Step 5
+------
+
++ Let's just clear up some minor cosmetics.
+
++ First, the text of each customer type wraps and makes the rows irregular.  
+Comparing to the iOS app we see that the text should be a single line and use
+an ellipsis.  This requires a bit of research, but we can achieve the same with:
+
+    _custTypeLabelView.SetMaxLines(1);
+    _custTypeLabelView.Ellipsize = Android.Text.TextUtils.TruncateAt.End;
+
++ Next the Select All/None buttons in iOS have no button chrome.  Again this 
+ requires a bit of experimentation, but this does it:
+
+    this.SetBackgroundColor(Android.Graphics.Color.Transparent);
+    this.SetTextColor(StyleGuide.MCSC_Default_LabelTextColor);
+    this.SetFont(StyleGuide.MCSC_Default_LabelFont);
+
