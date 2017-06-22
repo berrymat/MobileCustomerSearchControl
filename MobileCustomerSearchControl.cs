@@ -138,8 +138,7 @@ namespace MI.CustomControls
 			}
 		}
 
-#warning NXFW-9999
-		//NSTimer _timer = null;
+        IDisposable _timer = null;
 		bool _timerPaused = false;
 
 #if DEBUG
@@ -150,22 +149,18 @@ namespace MI.CustomControls
 
 		public void ClearTimer(bool pause = false)
 		{
-#warning NXFW-9999
-			//lock (this)
-			//{
-			//	AppDelegate.Instance.WillNavigate -= HandleWillNavigate;
-			//	NeedRefresh = false;
+			lock (this)
+			{
+				AppDelegate.Instance.WillNavigate -= HandleWillNavigate;
+				NeedRefresh = false;
 
-			//	if (_timer != null)
-			//	{
-			//		if (_timer.IsValid)
-			//			_timer.Invalidate();
-
-			//		_timer.Dispose();
-			//		_timer = null;
-			//		_timerPaused = pause;
-			//	}
-			//}
+				if (_timer != null)
+				{
+					_timer?.Dispose();
+					_timer = null;
+					_timerPaused = pause;
+				}
+			}
 		}
 
 		public void CreateTimer()
@@ -175,11 +170,10 @@ namespace MI.CustomControls
 				ClearTimer();
 
 				NeedRefresh = true;
-#warning NXFW-9999
-				//_timer = NSTimer.CreateScheduledTimer(_timerDelay, (t) =>
-				//{
-				//	RefreshCustomerSelection();
-				//});
+				_timer = AppDelegate.Schedule(_timerDelay, () =>
+				{
+					RefreshCustomerSelection();
+				});
 				AppDelegate.Instance.WillNavigate += HandleWillNavigate;
 			}
 		}
@@ -210,8 +204,7 @@ namespace MI.CustomControls
 
 				lock (this)
 				{
-#warning NXFW-9999
-					if (!force /*&& (_timer == null || !_timer.IsValid)*/)
+					if (!force && _timer == null)
 					{
 						AppDelegate.Instance.WillNavigate -= HandleWillNavigate;
 						_timerPaused = false;

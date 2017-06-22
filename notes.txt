@@ -158,3 +158,88 @@ the text of the button).  I could just comment this, but if it's a simple change
 I'd like to make it so I can see something in my button.  Ooh, there's a Text
 property!
 
+
+Step 2
+------
+
++ At this point, you have lots of choices about what to tackle next.  Obviously,
+the layout of the control needs work, but I think I would actually like to get
+it doing something.  I know, from running the iOS control, that it is the timer
+that actually does the work of refreshing the search, so that might be a good
+place to start.
+
++ Our problem is that it is the NSTimer that does the work in iOS (and that is
+iOS specific).  We need to find something equivalent in Android.  Before I
+start Googling (and possibly reinventing the wheel) I'm going to do a "Find
+In Files" in the MI-droid project to see if I can find something similar.  I'm
+going to search for "timer" and be looking for another control that's doing 
+something with it.
+
++ I get lots of results, but a lot of it is commented out code.  As I scroll
+down the results, I see something from CdlGrid:
+
+First the declaration...
+
+            IDisposable _stopDeletingTimer;
+
+Next, what looks like cleaning up the timer...
+
+            _stopDeletingTimer?.Dispose();
+            _stopDeletingTimer = null;
+
+And last, but not least, setting up the timer...
+
+            _stopDeletingTimer = AppDelegate.Schedule(10, () => {
+                StopDeleting();
+            });
+
+Obviously, it is not always going to be this easy, but it is always worth 
+looking around before giving up.  Things you find this way you will remember 
+(or at least be able to find again).
+
++ So given the above, I'm going to start uncommenting the timer related code
+in the control, starting with the declaration:
+
+	    NSTimer _timer; 
+
+	becomes
+
+	    IDisposable _timer;
+
++ Next the ClearTimer method.  We can replace:
+
+	    if (_timer.IsValid)
+	        _timer.Invalidate();
+
+	    _timer.Dispose();
+
+	with
+
+	    _timer?.Dispose();
+
+
++ Now the CreateTimer method.  We can replace:
+
+	    _timer = NSTimer.CreateScheduledTimer(_timerDelay, (t) =>
+	    {
+	        RefreshCustomerSelection();
+	    });
+
+    with
+
+        _timer = AppDelegate.Schedule(_timerDelay, () =>
+        {
+            RefreshCustomerSelection();
+        });
+
++ And inside the RefreshCustomerSelection method we need to reconstruct the if
+test:
+
+        if (!force /*&& (_timer == null || !_timer.IsValid)*/)
+
+    becomes
+
+        if (!force && _timer == null)
+
+    Note here that I have to "know" that Android timers don't have a notion
+    of being valid, but I can infer that from the CdlGrid usage.
