@@ -403,6 +403,13 @@ namespace MI.CustomControls
 				this.TitleLabel = Label;
 				_selectAllButton = new SelectAllButton(stringHelper, _helper);
                 _selectAllButton.Click += Handle_selectAllButtonTouchDown;
+				
+                var layoutParameters = new Android.Widget.LinearLayout.LayoutParams(
+                    Android.Views.ViewGroup.LayoutParams.WrapContent, 
+                    Android.Views.ViewGroup.LayoutParams.WrapContent);
+				layoutParameters.Gravity = Android.Views.GravityFlags.Center;
+				_selectAllButton.LayoutParameters = layoutParameters;
+				
                 this.AddView(_selectAllButton);
 				//this.SizeToFit();
 			}
@@ -414,6 +421,14 @@ namespace MI.CustomControls
 				_selectCust.On = false;
 				_selectCust.On = _helper.IsSelected;
 				_selectCust.ValueChanged += Handle_selectCustValueChanged;
+
+				var layoutParameters = new Android.Widget.LinearLayout.LayoutParams(
+                    Android.Views.ViewGroup.LayoutParams.WrapContent, 
+                    Android.Views.ViewGroup.LayoutParams.WrapContent);
+                layoutParameters.SetMargins(8.px(), 8.px(), 8.px(), 8.px());
+                layoutParameters.Gravity = Android.Views.GravityFlags.Center;
+                _selectCust.LayoutParameters = layoutParameters;
+
 				this.AddView(_selectCust);
 				//this.SizeToFit();
 			}
@@ -575,6 +590,14 @@ namespace MI.CustomControls
 				{
                     _custTypeImageView = new Android.Widget.ImageView(Context);
 					_custTypeImageView.SetImageDrawable(value);
+					
+                    var layoutParameters = new Android.Widget.LinearLayout.LayoutParams(
+                        Android.Views.ViewGroup.LayoutParams.WrapContent,
+                        Android.Views.ViewGroup.LayoutParams.WrapContent);
+					layoutParameters.SetMargins(8.px(), 8.px(), 8.px(), 8.px());
+					layoutParameters.Gravity = Android.Views.GravityFlags.Center;
+					_custTypeImageView.LayoutParameters = layoutParameters;
+
 					this.AddView(_custTypeImageView);
 #warning NXFW-9999
 					//this.SetNeedsLayout();
@@ -616,6 +639,15 @@ namespace MI.CustomControls
                     _custTypeLabelView.SetTextColor(StyleGuide.MCSC_Default_LabelTextColor);
                     _custTypeLabelView.SetBackgroundColor(StyleGuide.MCSC_Default_LabelBgColor);
                     _custTypeLabelView.SetFont(StyleGuide.MCSC_Default_LabelFont);
+
+					var layoutParameters = new Android.Widget.LinearLayout.LayoutParams(
+                        Android.Views.ViewGroup.LayoutParams.WrapContent, 
+                        Android.Views.ViewGroup.LayoutParams.WrapContent, 
+                        1f);    // Weight
+					layoutParameters.SetMargins(8.px(), 8.px(), 8.px(), 8.px());
+					layoutParameters.Gravity = Android.Views.GravityFlags.Center;
+					_custTypeLabelView.LayoutParameters = layoutParameters;
+
 					this.AddView(_custTypeLabelView);
 #warning NXFW-9999
 					//this.SetNeedsLayout();
@@ -657,7 +689,13 @@ namespace MI.CustomControls
                     _titleLabelView.SetTextColor(StyleGuide.MCSC_Default_LabelTextColor);
                     _titleLabelView.SetBackgroundColor(StyleGuide.MCSC_Default_LabelBgColor);
                     _titleLabelView.SetFont(StyleGuide.MCSC_Default_LabelFont);
-					this.AddView(_titleLabelView);
+
+					var layoutParameters = new Android.Widget.LinearLayout.LayoutParams(Android.Views.ViewGroup.LayoutParams.WrapContent, Android.Views.ViewGroup.LayoutParams.WrapContent, 1f);
+					layoutParameters.SetMargins(8.px(), 8.px(), 8.px(), 8.px());
+					layoutParameters.Gravity = Android.Views.GravityFlags.Center;
+					_titleLabelView.LayoutParameters = layoutParameters;
+
+                    this.AddView(_titleLabelView);
 #warning NXFW-9999
 					//this.SetNeedsLayout();
 				}

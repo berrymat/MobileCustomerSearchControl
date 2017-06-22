@@ -262,3 +262,74 @@ find that the Android button has a Click event - this sounds promising!
 
         _selectAllButton.Click += Handle_selectAllButtonTouchDown;
 
+
+
+Step 4
+------
+
++ OK, we've been avoiding it, but now we have to start tackling how the control
+looks!  Again this is a matter of preference for what to do first, but I think
+the most glaring thing is the horizontal arrangement of the views in each row.
+
++ First, it looks like all of the views need a bit of padding around them, so 
+that they are not touching and then the text view should expand to fill the 
+remaining space in each row.  
+
++ This is where layout parameters come into play.  Each type of layout has their
+own type of layout parameters.  For us, since our rows are LinearLayouts, we 
+will be using LinearLayout.LayoutParams.  The way this works is you create the 
+LinearLayout.LayoutParams and assign them to each child's LayoutParameters 
+property.
+
++ There are lots of options and we will only be using a few.  Visit 
+https://developer.android.com/guide/topics/ui/layout/linear.html
+
++ First, I will deal with the images/checks - I want them to be sized to fit the 
+image, but with a bit of padding around.
+
+    // Create layout parameters using "WrapContent" for width and height.  This
+    // means the view will be sized to fit the content exactly
+	var layoutParameters = new Android.Widget.LinearLayout.LayoutParams(
+        Android.Views.ViewGroup.LayoutParams.WrapContent, 
+        Android.Views.ViewGroup.LayoutParams.WrapContent);
+
+    // Add some margins.  Note the use of the convenience function px().  This
+    // converts from device independent sizes to pixels.  This ensures the 
+    // margins are the same physical size even on devices with high-DPI screens. 
+	layoutParameters.SetMargins(8.px(), 8.px(), 8.px(), 8.px());
+
+    // Layout gravity affects the child view at 90 degrees to the orientation
+    // of the linear layout i.e. in this case, because our layout direction
+    // is horizontal, the center here means center vertically.
+	layoutParameters.Gravity = Android.Views.GravityFlags.Center;
+
+    // Finally, assign the parameters to the child view
+	_selectCust.LayoutParameters = layoutParameters;
+
++ Next, I want to deal with the text views.  Here again I want the view to be 
+sized based on the content, but I also want it to stretch horizontally to fill
+the available space.  I achieve this by passing a weight value to the linear
+layout parameters constructor:
+
+    var layoutParameters = new Android.Widget.LinearLayout.LayoutParams(
+        Android.Views.ViewGroup.LayoutParams.WrapContent, 
+        Android.Views.ViewGroup.LayoutParams.WrapContent, 
+        1f);    // Weight
+    layoutParameters.SetMargins(8.px(), 8.px(), 8.px(), 8.px());
+    layoutParameters.Gravity = Android.Views.GravityFlags.Center;
+    _custTypeLabelView.LayoutParameters = layoutParameters;
+
+Because, in this case we only have one view we want to stretch we can specify
+any non-zero value for weight.  If there were mutiple views to stretch, the 
+relative values of the weights are used to distribute the extra space.
+
++ For the Select All/Select None buttons I use similar layout parameters, just 
+without margins:
+
+    var layoutParameters = new Android.Widget.LinearLayout.LayoutParams(
+        Android.Views.ViewGroup.LayoutParams.WrapContent, 
+        Android.Views.ViewGroup.LayoutParams.WrapContent);
+    layoutParameters.Gravity = Android.Views.GravityFlags.Center;
+    _selectAllButton.LayoutParameters = layoutParameters;
+
+
