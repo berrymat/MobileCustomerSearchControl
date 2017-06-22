@@ -1,33 +1,19 @@
 #define WILL_NAVIGATE_BLOCKS
 
 using System;
-using System.Collections;
 using System.Collections.Specialized;
-using System.Collections.Generic;
-using System.Configuration;
-using System.Data;
-//using System.Drawing ;
-using System.Web;
 using System.ComponentModel;
 using Dendrite.Framework;
 using Dendrite.BusinessObject;
 using Dendrite.CdlClasses;
-using Dendrite.CdlControls;
-using Dendrite.WebFramework;
 using Dendrite.WebForce;
 using Dendrite.IPhone.Forms;
 using Dendrite.IPhone.Forms.Layout;
-using Foundation;
-using UIKit;
-using CoreGraphics;
-using CoreAnimation;
-using System.Text;
 using Dendrite.WebForce.MobileComponents.Controls;
 
 
 namespace MI.CustomControls
 {
-	[Foundation.Preserve(AllMembers = true)]
 	public class MobileCustomerSearchControl : ICustomControlFactory
 	{
 		public System.ComponentModel.IComponent CreateWebInstance()
@@ -66,13 +52,15 @@ namespace MI.CustomControls
 			{
 				var old = Controller;
 
-				if (old != null)
-					old.DidRestoreState -= HandleDidRestoreState;
+#warning NXFW-9999
+				//if (old != null)
+				    //old.DidRestoreState -= HandleDidRestoreState;
 
 				_controller = WeakObject<CdlViewController>.Create(value);
 
-				if (value != null)
-					value.DidRestoreState += HandleDidRestoreState;
+#warning NXFW-9999
+				//if (value != null)
+				    //value.DidRestoreState += HandleDidRestoreState;
 			}
 		}
 
@@ -150,7 +138,8 @@ namespace MI.CustomControls
 			}
 		}
 
-		NSTimer _timer = null;
+#warning NXFW-9999
+		//NSTimer _timer = null;
 		bool _timerPaused = false;
 
 #if DEBUG
@@ -161,21 +150,22 @@ namespace MI.CustomControls
 
 		public void ClearTimer(bool pause = false)
 		{
-			lock (this)
-			{
-				AppDelegate.Instance.WillNavigate -= HandleWillNavigate;
-				NeedRefresh = false;
+#warning NXFW-9999
+			//lock (this)
+			//{
+			//	AppDelegate.Instance.WillNavigate -= HandleWillNavigate;
+			//	NeedRefresh = false;
 
-				if (_timer != null)
-				{
-					if (_timer.IsValid)
-						_timer.Invalidate();
+			//	if (_timer != null)
+			//	{
+			//		if (_timer.IsValid)
+			//			_timer.Invalidate();
 
-					_timer.Dispose();
-					_timer = null;
-					_timerPaused = pause;
-				}
-			}
+			//		_timer.Dispose();
+			//		_timer = null;
+			//		_timerPaused = pause;
+			//	}
+			//}
 		}
 
 		public void CreateTimer()
@@ -185,22 +175,25 @@ namespace MI.CustomControls
 				ClearTimer();
 
 				NeedRefresh = true;
-				_timer = NSTimer.CreateScheduledTimer(_timerDelay, (t) =>
-				{
-					RefreshCustomerSelection();
-				});
+#warning NXFW-9999
+				//_timer = NSTimer.CreateScheduledTimer(_timerDelay, (t) =>
+				//{
+				//	RefreshCustomerSelection();
+				//});
 				AppDelegate.Instance.WillNavigate += HandleWillNavigate;
 			}
 		}
 
-		[System.Runtime.InteropServices.DllImport(ObjCRuntime.Constants.AudioToolboxLibrary)]
-		static extern void AudioServicesPlaySystemSound(uint inSystemSoundID);
+#warning NXFW-9999
+		//[System.Runtime.InteropServices.DllImport(ObjCRuntime.Constants.AudioToolboxLibrary)]
+		//static extern void AudioServicesPlaySystemSound(uint inSystemSoundID);
 
 		void HandleWillNavigate(object sender, CancelEventArgs e)
 		{
 #if WILL_NAVIGATE_BLOCKS
 			e.Cancel = true; // Prevents Navigation while timer is active 
-			AudioServicesPlaySystemSound(1053);
+#warning NXFW-9999
+			//AudioServicesPlaySystemSound(1053);
 #else
             ClearTimer(true);
 #endif
@@ -217,7 +210,8 @@ namespace MI.CustomControls
 
 				lock (this)
 				{
-					if (!force && (_timer == null || !_timer.IsValid))
+#warning NXFW-9999
+					if (!force /*&& (_timer == null || !_timer.IsValid)*/)
 					{
 						AppDelegate.Instance.WillNavigate -= HandleWillNavigate;
 						_timerPaused = false;
@@ -274,8 +268,7 @@ namespace MI.CustomControls
 		}
 	}
 
-	[Foundation.Preserve(AllMembers = true)]
-	class MobileCustomerSearchControlView : DrteView, ICdlIPhoneDataControl, ICdlDataItemHandler
+    class MobileCustomerSearchControlView : DrteLinearLayout, ICdlIPhoneDataControl, ICdlDataItemHandler
 	{
 		bool _isControlLoaded = false;
 		StringHelper _stringHelper = new StringHelper();
@@ -284,21 +277,23 @@ namespace MI.CustomControls
 
 		const float _rowHeight = 41f;
 
-		public MobileCustomerSearchControlView()
-		{
-		}
+        public MobileCustomerSearchControlView()
+        {
+            Orientation = Android.Widget.Orientation.Vertical;
+        }
 
-		public MobileCustomerSearchControlView(IntPtr handle) : base(handle)
+		public MobileCustomerSearchControlView(IntPtr handle, Android.Runtime.JniHandleOwnership transfer) : base(handle, transfer)
 		{
 			DebugLog.Trace("MobileCustomerSearchControlView(IntPtr) called!!!");
 		}
 
-		public override void Detach()
-		{
-			if (_stringHelper != null)
-				_stringHelper.Detach();
-			base.Detach();
-		}
+#warning NXFW-9999
+		//public override void Detach()
+		//{
+		//	if (_stringHelper != null)
+		//		_stringHelper.Detach();
+		//	base.Detach();
+		//}
 
 		#region ICdlDataItemHandler implementation
 		public ICdlDataItem DataItem
@@ -340,50 +335,53 @@ namespace MI.CustomControls
 
 			_helper.SetDisplayTypes();
 			view = new CustomerSearchTypeView(_stringHelper, true, _stringHelper["wf_individuals"], "INDV", string.Empty);
-			view.Frame = new CGRect(new CGPoint(0, y), new CGSize(300f, 36f));
-			view.UserInteractionEnabled = true;
-			this.AddSubview(view);
+#warning NXFW-9999
+			//view.Frame = new CGRect(new CGPoint(0, y), new CGSize(300f, 36f));
+			//view.UserInteractionEnabled = true;
+			this.AddView(view);
 			y += 36f;
 
 			foreach (string customerType in _helper.DisplayPersonTypes.Keys)
 				AddCustomerType(customerType, _helper.DisplayPersonTypes[customerType].ToString(), ref y);
 
 			view = new CustomerSearchTypeView(_stringHelper, true, _stringHelper["wf_organizations"], "ORG", string.Empty);
-			view.Frame = new CGRect(new CGPoint(0, y), new CGSize(300f, 36f));
-			view.UserInteractionEnabled = true;
-			this.AddSubview(view);
+#warning NXFW-9999
+			//view.Frame = new CGRect(new CGPoint(0, y), new CGSize(300f, 36f));
+			//view.UserInteractionEnabled = true;
+			this.AddView(view);
 			y += 36f;
 
 			foreach (string customerType in _helper.DisplayOrgTypes.Keys)
 				AddCustomerType(customerType, _helper.DisplayOrgTypes[customerType].ToString(), ref y);
 
-			this.Frame = new CGRect(new CGPoint(0, 0), new CGSize(300f, y));
-			this.SetNeedsLayout();
-			this.SetNeedsDisplay();
+			//this.Frame = new CGRect(new CGPoint(0, 0), new CGSize(300f, y));
+			//this.SetNeedsLayout();
+			//this.SetNeedsDisplay();
 		}
 
 		private void AddCustomerType(string customerType, string label, ref float y)
 		{
 			var view = new CustomerSearchTypeView(_stringHelper, false, label, customerType, CustomerInfo.GetImage(customerType));
-			view.Frame = new CGRect(new CGPoint(0, y), new CGSize(300f, _rowHeight));
-			view.UserInteractionEnabled = true;
-			this.AddSubview(view);
+#warning NXFW-9999
+			//view.Frame = new CGRect(new CGPoint(0, y), new CGSize(300f, _rowHeight));
+			//view.UserInteractionEnabled = true;
+			this.AddView(view);
 			y += _rowHeight;
 		}
 
-		protected override ILayoutEngine CreateLayoutEngine()
-		{
-			return null;
-		}
+#warning NXFW-9999
+		//protected override ILayoutEngine CreateLayoutEngine()
+		//{
+		//	return null;
+		//}
 	}
 
-	[Foundation.Preserve(AllMembers = true)]
-	class CustomerSearchTypeView : DrteView, ICdlIPhoneDataControl, ICdlDataItemHandler
+    class CustomerSearchTypeView : DrteLinearLayout, ICdlIPhoneDataControl, ICdlDataItemHandler
 	{
 		StringHelper _stringHelper;
-		UILabel _titleLabelView = null;
-		UIImageView _custTypeImageView = null;
-		UILabel _custTypeLabelView = null;
+        Android.Widget.TextView _titleLabelView = null;
+		Android.Widget.ImageView _custTypeImageView = null;
+		Android.Widget.TextView _custTypeLabelView = null;
 		MobileCustomerSearchHelper _helper = new MobileCustomerSearchHelper();
 		bool _isControlLoaded = false;
 		string _original;
@@ -395,6 +393,8 @@ namespace MI.CustomControls
 
 		public CustomerSearchTypeView(StringHelper stringHelper, bool titleMode, string label, string type, string image)
 		{
+            Orientation = Android.Widget.Orientation.Horizontal;
+
 			_stringHelper = stringHelper;
 			_helper = new MobileCustomerSearchHelper();
 			TitleMode = titleMode;
@@ -406,11 +406,12 @@ namespace MI.CustomControls
 
 			if (TitleMode)
 			{
-				this.BackgroundColor = StyleGuide.OpaqueSkinColor;
+                this.SetBackgroundColor(StyleGuide.OpaqueSkinColor);
 				this.TitleLabel = Label;
 				_selectAllButton = new SelectAllButton(stringHelper, _helper);
-				_selectAllButton.TouchDown += Handle_selectAllButtonTouchDown;
-				this.AddSubview(_selectAllButton);
+#warning NXFW-9999
+				//_selectAllButton.TouchDown += Handle_selectAllButtonTouchDown;
+				this.AddView(_selectAllButton);
 				//this.SizeToFit();
 			}
 			else
@@ -421,45 +422,46 @@ namespace MI.CustomControls
 				_selectCust.On = false;
 				_selectCust.On = _helper.IsSelected;
 				_selectCust.ValueChanged += Handle_selectCustValueChanged;
-				this.AddSubview(_selectCust);
+				this.AddView(_selectCust);
 				//this.SizeToFit();
 			}
 		}
 
-		public CustomerSearchTypeView(IntPtr handle) : base(handle)
+		public CustomerSearchTypeView(IntPtr handle, Android.Runtime.JniHandleOwnership transfer) : base(handle, transfer)
 		{
 			DebugLog.Trace("CustomerSearchTypeView(IntPtr) called!!!");
 		}
 
-		public override void Draw(CGRect rect)
-		{
-			base.Draw(rect);
+#warning NXFW-9999
+		//public override void Draw(CGRect rect)
+		//{
+		//	base.Draw(rect);
 
-			nfloat size = StyleGuide.MCSC_SortOptTbl_LayerBorderWidth;
-			nfloat y = rect.Height - size + 1f;
-			nfloat x = rect.Width;
+		//	nfloat size = StyleGuide.MCSC_SortOptTbl_LayerBorderWidth;
+		//	nfloat y = rect.Height - size + 1f;
+		//	nfloat x = rect.Width;
 
-			using (CGContext context = UIGraphics.GetCurrentContext())
-			{
-				if (context != null)
-				{
-					context.SaveState();
-					context.SetShouldAntialias(false);
-					context.SetStrokeColor(MI.StyleGuide.MCSC_SortOptTbl_BorderColor.CGColor);
-					//if(TitleMode)
-					context.SetLineWidth(size);
+		//	using (CGContext context = UIGraphics.GetCurrentContext())
+		//	{
+		//		if (context != null)
+		//		{
+		//			context.SaveState();
+		//			context.SetShouldAntialias(false);
+		//			context.SetStrokeColor(MI.StyleGuide.MCSC_SortOptTbl_BorderColor.CGColor);
+		//			//if(TitleMode)
+		//			context.SetLineWidth(size);
 
-					context.AddLines(new CGPoint[]
-						{
-							new CGPoint(0f, y),
-							new CGPoint(x, y)
-						});
+		//			context.AddLines(new CGPoint[]
+		//				{
+		//					new CGPoint(0f, y),
+		//					new CGPoint(x, y)
+		//				});
 
-					context.DrawPath(CGPathDrawingMode.Stroke);
-					context.RestoreState();
-				}
-			}
-		}
+		//			context.DrawPath(CGPathDrawingMode.Stroke);
+		//			context.RestoreState();
+		//		}
+		//	}
+		//}
 
 		#region ICdlDataItemHandler implementation
 		public ICdlDataItem DataItem
@@ -550,12 +552,12 @@ namespace MI.CustomControls
 			return null;
 		}
 
-		protected UIImage CustImage
+		protected Android.Graphics.Drawables.Drawable CustImage
 		{
 			get
 			{
 				if (_custTypeImageView != null)
-					return _custTypeImageView.Image;
+                    return _custTypeImageView.Drawable;
 				else
 					return null;
 			}
@@ -565,21 +567,25 @@ namespace MI.CustomControls
 				{
 					if (value == null)
 					{
-						_custTypeImageView.DetachView();
+                        _custTypeImageView.RemoveFromSuperview();
 						_custTypeImageView = null;
-						this.SetNeedsLayout();
+#warning NXFW-9999
+						//this.SetNeedsLayout();
 					}
 					else
 					{
-						_custTypeImageView.Image = value;
-						this.SetNeedsLayout();
+                        _custTypeImageView.SetImageDrawable(value);
+#warning NXFW-9999
+						//this.SetNeedsLayout();
 					}
 				}
 				else if (value != null)
 				{
-					_custTypeImageView = new DetachableImageView(value);
-					this.AddSubview(_custTypeImageView);
-					this.SetNeedsLayout();
+                    _custTypeImageView = new Android.Widget.ImageView(Context);
+					_custTypeImageView.SetImageDrawable(value);
+					this.AddView(_custTypeImageView);
+#warning NXFW-9999
+					//this.SetNeedsLayout();
 				}
 			}
 		}
@@ -599,25 +605,28 @@ namespace MI.CustomControls
 				{
 					if (value == null || value.Length == 0)
 					{
-						_custTypeLabelView.DetachView();
+                        _custTypeLabelView.RemoveFromSuperview();
 						_custTypeLabelView = null;
-						this.SetNeedsLayout();
+#warning NXFW-9999
+						//this.SetNeedsLayout();
 					}
 					else
 					{
 						_custTypeLabelView.Text = value;
-						this.SetNeedsLayout();
+#warning NXFW-9999
+						//this.SetNeedsLayout();
 					}
 				}
 				else if (value != null)
 				{
 					_custTypeLabelView = new DetachableLabel();
 					_custTypeLabelView.Text = value;
-					_custTypeLabelView.TextColor = StyleGuide.MCSC_Default_LabelTextColor;
-					_custTypeLabelView.BackgroundColor = StyleGuide.MCSC_Default_LabelBgColor;
-					_custTypeLabelView.Font = StyleGuide.MCSC_Default_LabelFont;
-					this.AddSubview(_custTypeLabelView);
-					this.SetNeedsLayout();
+                    _custTypeLabelView.SetTextColor(StyleGuide.MCSC_Default_LabelTextColor);
+                    _custTypeLabelView.SetBackgroundColor(StyleGuide.MCSC_Default_LabelBgColor);
+                    _custTypeLabelView.SetFont(StyleGuide.MCSC_Default_LabelFont);
+					this.AddView(_custTypeLabelView);
+#warning NXFW-9999
+					//this.SetNeedsLayout();
 				}
 			}
 		}
@@ -637,168 +646,177 @@ namespace MI.CustomControls
 				{
 					if (value == null || value.Length == 0)
 					{
-						_titleLabelView.DetachView();
+						_titleLabelView.RemoveFromSuperview();
 						_titleLabelView = null;
-						this.SetNeedsLayout();
+#warning NXFW-9999
+						//this.SetNeedsLayout();
 					}
 					else
 					{
 						_titleLabelView.Text = value;
-						this.SetNeedsLayout();
+#warning NXFW-9999
+						//this.SetNeedsLayout();
 					}
 				}
 				else if (value != null)
 				{
 					_titleLabelView = new DetachableLabel();
 					_titleLabelView.Text = value;
-					_titleLabelView.TextColor = StyleGuide.MCSC_Default_LabelTextColor;
-					_titleLabelView.BackgroundColor = StyleGuide.MCSC_Default_LabelBgColor;
-					_titleLabelView.Font = StyleGuide.MCSC_Default_LabelFont;
-					this.AddSubview(_titleLabelView);
-					this.SetNeedsLayout();
+                    _titleLabelView.SetTextColor(StyleGuide.MCSC_Default_LabelTextColor);
+                    _titleLabelView.SetBackgroundColor(StyleGuide.MCSC_Default_LabelBgColor);
+                    _titleLabelView.SetFont(StyleGuide.MCSC_Default_LabelFont);
+					this.AddView(_titleLabelView);
+#warning NXFW-9999
+					//this.SetNeedsLayout();
 				}
 			}
 		}
 
-		CGSize TitleModeSizing(CGSize bounds, bool layout)
-		{
-			CGSize size1 = CGSize.Empty;
-			CGSize size2 = CGSize.Empty;
+#warning NXFW-9999
+		//CGSize TitleModeSizing(CGSize bounds, bool layout)
+		//{
+		//	CGSize size1 = CGSize.Empty;
+		//	CGSize size2 = CGSize.Empty;
 
-			if (_titleLabelView != null)
-				size1 = _titleLabelView.SizeThatFits(bounds);
+		//	if (_titleLabelView != null)
+		//		size1 = _titleLabelView.SizeThatFits(bounds);
 
-			if (_selectAllButton != null)
-				size2 = _selectAllButton.SizeThatFits(bounds);
+		//	if (_selectAllButton != null)
+		//		size2 = _selectAllButton.SizeThatFits(bounds);
 
 
-			if (layout)
-			{
-				if (_titleLabelView != null)
-				{
-					var offset = (bounds.Height - size1.Height) / 2;
-					_titleLabelView.Frame = new CGRect(new CGPoint(_padding, offset), size1);
-				}
+		//	if (layout)
+		//	{
+		//		if (_titleLabelView != null)
+		//		{
+		//			var offset = (bounds.Height - size1.Height) / 2;
+		//			_titleLabelView.Frame = new CGRect(new CGPoint(_padding, offset), size1);
+		//		}
 
-				if (_selectAllButton != null)
-				{
-					var offset = (bounds.Height - size2.Height) / 2;
-					var x = bounds.Width - size2.Width;
+		//		if (_selectAllButton != null)
+		//		{
+		//			var offset = (bounds.Height - size2.Height) / 2;
+		//			var x = bounds.Width - size2.Width;
 
-					_selectAllButton.Frame = new CGRect(new CGPoint(x, offset), size2);
-				}
-			}
+		//			_selectAllButton.Frame = new CGRect(new CGPoint(x, offset), size2);
+		//		}
+		//	}
 
-			nfloat height = NMath.Max(size2.Height, size1.Height);
-			return new CGSize(bounds.Width, height + _padding + _padding);
-		}
+		//	nfloat height = NMath.Max(size2.Height, size1.Height);
+		//	return new CGSize(bounds.Width, height + _padding + _padding);
+		//}
 
-		CGSize NormalModeSizing(CGSize bounds, bool layout)
-		{
-			CGSize size1 = CGSize.Empty;
-			CGSize size2 = CGSize.Empty;
-			CGSize size3 = CGSize.Empty;
+#warning NXFW-9999
+		//CGSize NormalModeSizing(CGSize bounds, bool layout)
+		//{
+		//	CGSize size1 = CGSize.Empty;
+		//	CGSize size2 = CGSize.Empty;
+		//	CGSize size3 = CGSize.Empty;
 
-			if (_custTypeImageView != null)
-				size1 = _custTypeImageView.SizeThatFits(bounds);
+		//	if (_custTypeImageView != null)
+		//		size1 = _custTypeImageView.SizeThatFits(bounds);
 
-			if (_selectCust != null)
-				size3 = _selectCust.SizeThatFits(bounds);
+		//	if (_selectCust != null)
+		//		size3 = _selectCust.SizeThatFits(bounds);
 
-			nfloat remainingWidth = bounds.Width - size1.Width - _spacing - _spacing - size3.Width;
-			CGSize bounds2 = new CGSize(remainingWidth, bounds.Height);
+		//	nfloat remainingWidth = bounds.Width - size1.Width - _spacing - _spacing - size3.Width;
+		//	CGSize bounds2 = new CGSize(remainingWidth, bounds.Height);
 
-			if (_custTypeLabelView != null)
-				size2 = _custTypeLabelView.SizeThatFits(bounds2);
+		//	if (_custTypeLabelView != null)
+		//		size2 = _custTypeLabelView.SizeThatFits(bounds2);
 
-			if (layout)
-			{
-				nfloat x = _padding;
+		//	if (layout)
+		//	{
+		//		nfloat x = _padding;
 
-				if (_custTypeImageView != null)
-				{
-					var offset = (bounds.Height - size1.Height) / 2;
-					_custTypeImageView.Frame = new CGRect(new CGPoint(x, offset), size1); ;
-					x += size1.Width + _spacing;
-				}
+		//		if (_custTypeImageView != null)
+		//		{
+		//			var offset = (bounds.Height - size1.Height) / 2;
+		//			_custTypeImageView.Frame = new CGRect(new CGPoint(x, offset), size1); ;
+		//			x += size1.Width + _spacing;
+		//		}
 
-				if (_custTypeLabelView != null)
-				{
-					size2.Width = NMath.Min(size2.Width, bounds2.Width);
-					var offset = (bounds.Height - size2.Height) / 2;
-					_custTypeLabelView.Frame = new CGRect(new CGPoint(x, offset), size2); ;
-				}
+		//		if (_custTypeLabelView != null)
+		//		{
+		//			size2.Width = NMath.Min(size2.Width, bounds2.Width);
+		//			var offset = (bounds.Height - size2.Height) / 2;
+		//			_custTypeLabelView.Frame = new CGRect(new CGPoint(x, offset), size2); ;
+		//		}
 
-				if (_selectCust != null)
-				{
-					var offset = (bounds.Height - size3.Height) / 2;
-					x = bounds.Width - size3.Width;
-					_selectCust.Frame = new CGRect(new CGPoint(x, offset), size3);
-				}
-			}
-			nfloat height = NMath.Max(size1.Height, NMath.Max(size2.Height, size3.Height));
+		//		if (_selectCust != null)
+		//		{
+		//			var offset = (bounds.Height - size3.Height) / 2;
+		//			x = bounds.Width - size3.Width;
+		//			_selectCust.Frame = new CGRect(new CGPoint(x, offset), size3);
+		//		}
+		//	}
+		//	nfloat height = NMath.Max(size1.Height, NMath.Max(size2.Height, size3.Height));
 
-			return new CGSize(bounds.Width, height + _padding + _padding);
-		}
+		//	return new CGSize(bounds.Width, height + _padding + _padding);
+		//}
 
-		public override CGSize SizeThatFits(CGSize size)
-		{
-			CGSize bounds = new CGSize(size.Width - _padding - _padding, size.Height);
+#warning NXFW-9999
+		//public override CGSize SizeThatFits(CGSize size)
+		//{
+		//	CGSize bounds = new CGSize(size.Width - _padding - _padding, size.Height);
 
-			if (TitleMode)
-				bounds = TitleModeSizing(bounds, false);
-			else
-				bounds = NormalModeSizing(bounds, false);
+		//	if (TitleMode)
+		//		bounds = TitleModeSizing(bounds, false);
+		//	else
+		//		bounds = NormalModeSizing(bounds, false);
 
-			bounds.Width += (_padding + _padding);
-			return bounds;
-		}
+		//	bounds.Width += (_padding + _padding);
+		//	return bounds;
+		//}
 
-		public override void LayoutSubviews()
-		{
-			if (!BaseLayoutEngine.HasWindow(this))
-				return;
+#warning NXFW-9999
+		//public override void LayoutSubviews()
+		//{
+		//	if (!BaseLayoutEngine.HasWindow(this))
+		//		return;
 
-			CGSize bounds = new CGSize(this.Bounds.Width - _padding - _padding, this.Bounds.Height);
+		//	CGSize bounds = new CGSize(this.Bounds.Width - _padding - _padding, this.Bounds.Height);
 
-			if (TitleMode)
-				TitleModeSizing(bounds, true);
-			else
-				NormalModeSizing(bounds, true);
+		//	if (TitleMode)
+		//		TitleModeSizing(bounds, true);
+		//	else
+		//		NormalModeSizing(bounds, true);
 
-			/*
-            UIGraphics.BeginImageContext(size3);
-            using (CGContext context = UIGraphics.GetCurrentContext())
-            {
-                if (context != null)
-                {
-                    context.SaveState();
-                    //300-27-5 = 268
-                    _selectCust.Frame = new CGRect(268, offset3 + _padding, size3.Width, size3.Height) ;
-                    _selectCust.Draw(_selectCust.Frame);
-                    context.RestoreState();
-                }
-            }
-            UIGraphics.EndImageContext();
-            */
-		}
+		//	/*
+		//          UIGraphics.BeginImageContext(size3);
+		//          using (CGContext context = UIGraphics.GetCurrentContext())
+		//          {
+		//              if (context != null)
+		//              {
+		//                  context.SaveState();
+		//                  //300-27-5 = 268
+		//                  _selectCust.Frame = new CGRect(268, offset3 + _padding, size3.Width, size3.Height) ;
+		//                  _selectCust.Draw(_selectCust.Frame);
+		//                  context.RestoreState();
+		//              }
+		//          }
+		//          UIGraphics.EndImageContext();
+		//          */
+		//}
 	}
 
 	class SelectAllButton : DetachableButton
 	{
-		internal SelectAllButton(StringHelper stringHelper, MobileCustomerSearchHelper helper) : base(new CGRect(0f, 0f, 80f, 30f))
+        internal SelectAllButton(StringHelper stringHelper, MobileCustomerSearchHelper helper) : base()
 		{
-			Layer.BackgroundColor = StyleGuide.MCSC_SortOptTbl_LayerBgColor;
+#warning NXFW-9999
+			//Layer.BackgroundColor = StyleGuide.MCSC_SortOptTbl_LayerBgColor;
 			//TouchDown += HandleTouchDown;
 			string title;
 			if (helper.AllSelected())
 				title = stringHelper["wf_select_none"];
 			else
 				title = stringHelper["select_all"];
-			this.SetTitle(title, UIControlState.Normal);
+
+            Text = title;
 		}
 
-		public SelectAllButton(IntPtr handle) : base(handle)
+		public SelectAllButton(IntPtr handle, Android.Runtime.JniHandleOwnership transfer) : base(handle, transfer)
 		{
 			DebugLog.Trace("SelectAllButton(IntPtr) called!!!");
 		}

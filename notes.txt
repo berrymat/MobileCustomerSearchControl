@@ -6,3 +6,155 @@ Step 0
 
 + Copy and paste iOS version of file into Android project
 + Include entry in Tools/AppDelegate+RegisterTypes.cs
+
+Step 1
+------
+
++ The compiler is your friend - try to build!
+
++ My goal in this step is to get something compiling.  It would be great if I
+could have something show up on the screen!  My strategy is to comment out 
+problems at this stage.  You can use #warning to indicate areas to come back to.
+
+Problems:
+
++ The "using" section -  My recommendation is to remove the 
+unused items (the greyed out ones) and also remove the ones causing errors 
+(these are the iOS specific ones).
+
++ [Foundation.Preserve] attributes - These are iOS specific and 
+can also be removed. 
+
++ "new MobileCustomerSearchControlView" error - I think
+this is because whatever view this is derived from is iOS specific.  I'm not 
+going to comment this out because without it, the custom control will do 
+nothing!
+
++ CdlViewController events - there are events that our CdlViewController for 
+Android does not implement.  In looking at the function that these call, I can
+see that it is #if'ed out.  I suspect that these are not important, but will 
+just comment for now.
+
++ NSTimer (iOS specific) error - I'm not sure what the equivalent is
+in Android, so I'm going to comment it out for now.  This means also commenting 
+out things that use it.  To minimize the "ripple effect" I tend to comment out 
+the content of functions, not the functions themselves. 
+
++ AudioServices (iOS specific) - again comment out for now.  To be honest, I 
+don't think I'm going to convert this at all!
+
++ DrteView error on MobileCustomerSearchControlView - here I need to know a 
+suitable replacement!  Again I could just comment, but then I get nothing 
+showing up.  If I think about this control, I know that this outer view contains
+a vertical list of children (each of the customer types) and I know that Android
+has pre-built "layouts" 
+(https://developer.android.com/guide/topics/ui/declaring-layout.html).  
+It seems to me that a vertical linear layout would be the best choice.  Note 
+that, as for the iOS app, the Framework tends to defined "Drte" subclasses of
+the ones from Mono.droid, so I will derive from DrteLinearLayout.  I'll also
+set the orientation to vertical in the constructor.
+
++ IntPtr handle constructor error - this is a special Xamarin.iOS contructor.  
+The equivalent is a constructor that takes 
+(IntPtr handle, Android.Runtime.JniHandleOwnership transfer)
+
++ Detach error - detaching was a "special" memory management technique
+implemented in the iOS app.  We don't have an equivalent in the Android app.  My
+recommendation is to comment these methods initially so that you can return
+later to see if there is some cleanup you need to do in Dispose.
+
++ view.Frame error - in iOS (certainly in our app) there is a lot of explicit
+positioning of views.  With the built-in layouts available in Android (plus
+the fact that there are lots of different screen sizes) we want to avoid setting
+explicit frames.  The linear layout takes care of stacking its children, so 
+I comment out frame setting.  In this case, I think I will ultimately be able
+to remove this code altogether.
+
++ UserInteractionEnabled error - again iOS specific and comment for now.
+
++ AddSubview error - this requires a bit of Android knowledge (or a bit of 
+Googling), but the equivalent is AddView, so I change it.  You will temporarily
+introduce another error because again CustomerSearchTypeView is probably
+deriving from something iOS specific.
+
++ SetNeedsLayout/SetNeedsDisplay - these are again to do with flagging views 
+for laying out or redrawing.  Comment out because I don't know if they are
+going to be needed in Android.
+
++ CreateLayoutEngine error - more iOS layout stuff!  Again the built-in 
+Android layouts will take care of this.
+
++ DrteView error on CustomerSearchTypeView - again I'm looking for what to 
+replace DrteView with.  In Android, any time you have a "view" that contains
+other views, think "layout".  Here again, because I have an idea about what
+the final result should look like (i.e. each "row" in the search control
+contains an image, some text, a checkbox horizontally) then another linear
+layout seems a good choice.  Note that by using LayoutParameters in a linear
+layout we can achieve things like children dynamically resizing to fill the 
+avaiable space (I'm thinking of the text in this case).  So once again derive
+from DrteLinearLayout and set orientation to 
+
++ UILabel error - you get to know that UILabel -> Android.Widget.TextView
+
++ UIImageView error - you also get to know that 
+UIImageView -> Android.Widget.ImageView
+
++ BackgroundColor error - just a hint, but a lot of times Android has explicit 
+Set/Get methods instead of properties.  I tried it here and SetBackgroundColor
+works!  Otherwise I would have commented and come back later.
+
++ TouchDown event error - not sure, so I comment.
+
++ Draw method error - Ick!  This control has custom drawing code!!! Definitely
+comment this stuff for later.  Luckily, only looks like it's drawing divider
+lines.
+
++ UIImage error - another standard substitution 
+UIImage -> Android.Graphics.Drawables.Drawable
+
++ ImageView doesn't have Image property - but as you might expect if UIImage -> 
+Drawable, then ImageView has a Drawable property.
+
++ DetachView error - as mentioned above we don't have the "Detach" mechanism in
+Android.  However, I do know that one of the functions of DetachView was to 
+remove the view from its parent... and there is a RemoveFromSuperview extension
+method.
+
++ Image property set error - here I try to change the property set to Drawable.
+There is no property set for Drawable, but there is a SetImageDrawable function.
+
++ DetachableImageView error - there is no DetachableImageView in framework, so 
+I'm going to create an ImageView directly.  Note that all views in Android take
+a context as an argument in their constructor.  Typically, if the thing doing
+the creation is also a view, then you can just pass the Context property.  In
+order to also set the initial image, I have to also call SetImageDrawable.
+
++ TextColor property error - let's try SetTextColor!
+
++ Font property error - let's try SetFont!
+
++ TitleModeSizing/NormalModeSizing - this all looks like code to do with sizing/
+layout.  Let's comment out.
+
++ SizeThatFits error - again code to figure out sizing.  We'll talk later about
+LayoutParameters which have built-in things like WrapContent/MatchParent which
+in a lot of cases remove the need for custom code.
+
++ LayoutSubviews error - for all the above reasons, it's gone!  Well at least 
+commented out.
+
++ SelectAllButton calling base error - DetachableButton does not have a 
+constructor that takes a rect (again typically no explicit sizing in Android).
+We will call the default constructor with no arguments.  Note that although I 
+said above that "Detach*" no longer exists, we do preserve some classes to make 
+conversion easier!
+
+Layer.BackgroundColor error - iOS has the concept of Layers associated with
+views.  I am not aware of anything similar in Android, so I'm commenting it
+out for now.  I'll figure out it's purpose later.
+
+SetTitle error - the Android button has no SetTitle method (in iOS this sets
+the text of the button).  I could just comment this, but if it's a simple change
+I'd like to make it so I can see something in my button.  Ooh, there's a Text
+property!
+
