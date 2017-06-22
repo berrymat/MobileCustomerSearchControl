@@ -397,3 +397,18 @@ off in this case, so you need:
 
     this.SetWillNotDraw(false);
 
+
+Step 7
+------
+
++ I was annoyed by the fact that clicking the Select All/Select None buttons
+showed no feedback until the timer fired.  I fixed this in the Android version -
+not sure if this is really a good idea!  The details are left as an exercise
+for the reader!
+
++ Cleaned up #warnings as I am pretty happy with the Android functionality.
+
++ I still think that the layout of the Android control could be tweaked, but
+this would just be a case of fiddling with the layout parameter margins.
+
+  
