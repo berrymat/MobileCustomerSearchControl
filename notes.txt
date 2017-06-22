@@ -1,0 +1,8 @@
+Notes for iOS -> Android conversion
+===================================
+
+Step 0
+------
+
++ Copy and paste iOS version of file into Android project
++ Include entry in Tools/AppDelegate+RegisterTypes.cs
