@@ -402,9 +402,8 @@ namespace MI.CustomControls
                 this.SetBackgroundColor(StyleGuide.OpaqueSkinColor);
 				this.TitleLabel = Label;
 				_selectAllButton = new SelectAllButton(stringHelper, _helper);
-#warning NXFW-9999
-				//_selectAllButton.TouchDown += Handle_selectAllButtonTouchDown;
-				this.AddView(_selectAllButton);
+                _selectAllButton.Click += Handle_selectAllButtonTouchDown;
+                this.AddView(_selectAllButton);
 				//this.SizeToFit();
 			}
 			else

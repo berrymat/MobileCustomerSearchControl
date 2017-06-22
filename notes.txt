@@ -243,3 +243,22 @@ test:
 
     Note here that I have to "know" that Android timers don't have a notion
     of being valid, but I can infer that from the CdlGrid usage.
+
+
+
+Step 3
+------
+
++ To complete the interactivity, let's get the Select All/Select None buttons 
+working.
+
++ The key thing here is to hook up something when the button is tapped.  In iOS,
+this was by hooking to the TouchDown event.  With the help of Intellisense, I 
+find that the Android button has a Click event - this sounds promising!
+
+        _selectAllButton.TouchDown += Handle_selectAllButtonTouchDown;
+
+    becomes
+
+        _selectAllButton.Click += Handle_selectAllButtonTouchDown;
+
